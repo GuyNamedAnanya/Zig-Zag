@@ -18,7 +18,8 @@ public class CharController : MonoBehaviour
     Rigidbody rb;
     Animator anim;
     AudioSource audioSource;
-
+    float fallingDistance = -2f;
+    float characterRotation = 45f;
     bool isWalkingRight = true;
     // Start is called before the first frame update
     void Awake()
@@ -32,6 +33,7 @@ public class CharController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //starts the running animaton when the game starts
         if(gameManager.isGameStarted == false)
         {
             return;
@@ -40,9 +42,13 @@ public class CharController : MonoBehaviour
         {
             anim.SetTrigger("isRunning");
         }
+
         IncreaseSpeed();
     }
 
+    /// <summary>
+    /// Increases the speed of the player after every set duration of time
+    /// </summary>
     void IncreaseSpeed()
     {
         if(elapsedTime < timeToIncreaseSpeed)
@@ -57,7 +63,7 @@ public class CharController : MonoBehaviour
         rb.transform.position = transform.position + moveSpeed * Time.deltaTime * transform.forward;
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         RaycastHit hit;
@@ -66,6 +72,7 @@ public class CharController : MonoBehaviour
             Switch();
         }
 
+        // checks if raycast hits the gorund or not to set the animator to falling or not falling
         if (!Physics.Raycast(rayStart.position, -transform.up, out hit, Mathf.Infinity))
         {
             anim.SetTrigger("IsFalling");
@@ -75,27 +82,35 @@ public class CharController : MonoBehaviour
             anim.SetTrigger("notFalling");
         }
 
-        if(transform.position.y < -2)
+        //if position of character is less than falling distance then we restart
+        if(transform.position.y < fallingDistance)
         {
             gameManager.RestartGame();
         }
     }
 
+    /// <summary>
+    /// switches the direction of player from left to right
+    /// </summary>
     void Switch()
     {
         if(gameManager.isGameStarted == false)
         {
             return;
         }
+
+        //toggles between true and false for iswalkingright
         isWalkingRight = !isWalkingRight;
 
         if(isWalkingRight)
         {
-            transform.rotation = Quaternion.Euler(0, 45, 0);
+            //rotates the player right if it is facing right
+            transform.rotation = Quaternion.Euler(0, characterRotation, 0);
         }
         else
         {
-            transform.rotation = Quaternion.Euler(0, -45, 0);
+            //rotates the player left if it is facing left
+            transform.rotation = Quaternion.Euler(0, -characterRotation, 0);
         }
     }
 
@@ -103,6 +118,10 @@ public class CharController : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Crystal"))
         {
+            //if player collides with diamond
+            //score is increased
+            //pickup effect is played
+            //pickup audio is played
             gameManager.IncreaseScore();
             GameObject g = Instantiate(Effect, rayStart.transform.position, Quaternion.identity);
             audioSource.PlayOneShot(pickupSFX);

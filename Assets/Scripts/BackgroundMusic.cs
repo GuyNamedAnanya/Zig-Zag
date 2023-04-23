@@ -7,6 +7,7 @@ public class BackgroundMusic : MonoBehaviour
     public static BackgroundMusic instance;
     private void Awake()
     {
+        // singleton for background music
         if (instance == null)
         {
             instance = this;
