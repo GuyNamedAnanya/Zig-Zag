@@ -7,7 +7,10 @@ public class CharController : MonoBehaviour
 {
     [SerializeField] Transform rayStart;
     [SerializeField] AudioClip pickupSFX;
-
+    [SerializeField] float moveSpeed = 2f;
+    [SerializeField] float elapsedTime = 0;
+    [SerializeField] float timeToIncreaseSpeed = 5f;
+    [SerializeField] float moveSpeedAddFactor = 0.5f;
     [SerializeField] GameObject Effect;
 
     
@@ -37,7 +40,21 @@ public class CharController : MonoBehaviour
         {
             anim.SetTrigger("isRunning");
         }
-        rb.transform.position = transform.position + 2 * Time.deltaTime * transform.forward;
+        IncreaseSpeed();
+    }
+
+    void IncreaseSpeed()
+    {
+        if(elapsedTime < timeToIncreaseSpeed)
+        {
+            elapsedTime += Time.deltaTime;
+        }
+        else
+        {
+            moveSpeed += moveSpeedAddFactor;
+            elapsedTime = 0;
+        }
+        rb.transform.position = transform.position + moveSpeed * Time.deltaTime * transform.forward;
     }
 
     // Update is called once per frame
