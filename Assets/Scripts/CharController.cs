@@ -6,6 +6,7 @@ using UnityEngine;
 public class CharController : MonoBehaviour
 {
     [SerializeField] Transform rayStart;
+    [SerializeField] AudioClip pickupSFX;
 
     [SerializeField] GameObject Effect;
 
@@ -13,6 +14,7 @@ public class CharController : MonoBehaviour
     GameManager gameManager;
     Rigidbody rb;
     Animator anim;
+    AudioSource audioSource;
 
     bool isWalkingRight = true;
     // Start is called before the first frame update
@@ -21,6 +23,7 @@ public class CharController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         gameManager = FindObjectOfType<GameManager>();
+        audioSource = GetComponent<AudioSource>();
         
     }
 
@@ -85,6 +88,7 @@ public class CharController : MonoBehaviour
         {
             gameManager.IncreaseScore();
             GameObject g = Instantiate(Effect, rayStart.transform.position, Quaternion.identity);
+            audioSource.PlayOneShot(pickupSFX);
             Destroy(g, 1f);
             Destroy(other.gameObject);            
         }
