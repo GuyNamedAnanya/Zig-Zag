@@ -4,11 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI highScoreText;
+    [SerializeField] GameObject playPanel;
 
     public bool isGameStarted = false;
 
@@ -23,16 +25,17 @@ public class GameManager : MonoBehaviour
         isGameStarted = true;
         FindObjectOfType<Road>().StartCreating();
     }
-
-    private void Update()
+    void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Return))
-        {
-            StartGame();
-        }
+        TogglePanel();
     }
 
-    public void EndGame()
+    public void PlayGame()
+    {
+        StartGame();
+    }
+
+    public void RestartGame()
     {
         SceneManager.LoadScene(0);
     }
@@ -55,4 +58,17 @@ public class GameManager : MonoBehaviour
         int i = PlayerPrefs.GetInt("Highscore");
         return i;
     }
+
+    void TogglePanel()
+    {
+        if(!isGameStarted)
+        {
+            playPanel.gameObject.SetActive(true);
+        }
+        else
+        {
+            playPanel.gameObject.SetActive(false);
+        }
+    }
+    
 }

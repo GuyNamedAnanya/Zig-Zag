@@ -60,7 +60,7 @@ public class CharController : MonoBehaviour
 
         if(transform.position.y < -2)
         {
-            gameManager.EndGame();
+            gameManager.RestartGame();
         }
     }
 
